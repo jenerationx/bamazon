@@ -40,16 +40,20 @@ function start() {
             if (answer.menu === "View Products for Sale") {
                 listItems();
             }
+            else if (answer.menu === "View Low Inventory") {
+                lowInventory();
+            }
+
             else if (answer.menu === "Add to Inventory") {
-                console.log("add inventory")
+                addInventory();
             }
             else if (answer.menu === "Add New Product") {
-                console.log("add product")
+                addItem();
             }
-            connection.end();
         });
 }
 // View Products for Sale
+// If a manager selects View Products for Sale, the app should list every available item: the item IDs, names, prices, and quantities.
 function listItems() {
     connection.query("SELECT * FROM products", function (err, res) {
         console.log("\nWelcome to Jenny's Haberdashery Inventory Management System!\n")
@@ -60,11 +64,94 @@ function listItems() {
             console.log("------------------------------------------------------------------------")
         }
     })
+    connection.end();
+
 }
+
 // View Low Inventory
-// Add to Inventory
-// Add New Product
-// If a manager selects View Products for Sale, the app should list every available item: the item IDs, names, prices, and quantities.
 // If a manager selects View Low Inventory, then it should list all items with an inventory count lower than five.
+function lowInventory() {
+    connection.query("SELECT * FROM products", function (err, res) {
+        console.log("\nItem ID | Product Name | Department Name | Price | Quantity in Stock")
+        console.log("------------------------------------------------------------------------")
+        for (var i = 0; i < res.length; i++) {
+            if (parseInt(res[i].stock_quantity) < 5) {
+                console.log(res[i].item_id + " | " + res[i].product_name + " | " + res[i].department_name + " | " + "$" + res[i].price + " | " + res[i].stock_quantity);
+                console.log("------------------------------------------------------------------------")
+
+            }
+        }
+    })
+    connection.end();
+
+}
+
+// Add to Inventory
 // If a manager selects Add to Inventory, your app should display a prompt that will let the manager "add more" of any item currently in the store.
+function addInventory() {
+    connection.query(
+    );
+}
+// Add New Product
 // If a manager selects Add New Product, it should allow the manager to add a completely new product to the store.
+function addItem() {
+    inquirer
+        .prompt([
+            {
+                name: "id",
+                type: "input",
+                message: "What is the item ID?",
+                validate: function (value) {
+                    if (isNaN(value) === false) {
+                        return true;
+                    }
+                    return false;
+                }
+            },
+            {
+                name: "name",
+                type: "input",
+                message: "What is the name of the product?"
+            },
+            {
+                name: "department",
+                type: "input",
+                message: "What department is the item in?"
+            },
+            {
+                name: "price",
+                type: "input",
+                message: "What is the price of the item?"
+            },
+            {
+                name: "quantity",
+                type: "input",
+                message: "What is the quantity in stock?",
+                validate: function (value) {
+                    if (isNaN(value) === false) {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        ])
+        .then(function (ans) {
+            // when finished prompting, insert a new item into the db with that info
+
+            connection.query(
+                "INSERT INTO products SET ?",
+                {
+                    item_id: ans.id,
+                    product_name: ans.name,
+                    department_name: ans.department,
+                    price: ans.price,
+                    stock_quantity: ans.quantity
+                },
+                function (err) {
+                    if (err) throw err;
+                    console.log("Your new item was added!");
+                }
+            );    
+            connection.end();
+        })
+}
