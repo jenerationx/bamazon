@@ -36,7 +36,7 @@ function start() {
             choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product"]
         })
         .then(function (answer) {
-            // based on their answer, either call the bid or the post functions
+            // based on their answer, call the related function
             if (answer.menu === "View Products for Sale") {
                 listItems();
             }
@@ -52,6 +52,7 @@ function start() {
             }
         });
 }
+
 // View Products for Sale
 // If a manager selects View Products for Sale, the app should list every available item: the item IDs, names, prices, and quantities.
 function listItems() {
@@ -65,7 +66,6 @@ function listItems() {
         }
     })
     connection.end();
-
 }
 
 // View Low Inventory
@@ -78,7 +78,6 @@ function lowInventory() {
             if (parseInt(res[i].stock_quantity) < 5) {
                 console.log(res[i].item_id + " | " + res[i].product_name + " | " + res[i].department_name + " | " + "$" + res[i].price + " | " + res[i].stock_quantity);
                 console.log("------------------------------------------------------------------------")
-
             }
         }
     })
@@ -89,8 +88,56 @@ function lowInventory() {
 // Add to Inventory
 // If a manager selects Add to Inventory, your app should display a prompt that will let the manager "add more" of any item currently in the store.
 function addInventory() {
-    connection.query(
-    );
+    // query the database for all items being auctioned
+    connection.query("SELECT * FROM products", function (err, res) {
+        if (err) throw err;
+        // once you have the items, prompt the user for which they'd like to bid on
+        inquirer
+            .prompt([
+                {
+                    name: "name",
+                    type: "list",
+                    choices: function () {
+                        var choiceArray = [];
+                        for (var i = 0; i < res.length; i++) {
+                            choiceArray.push(res[i].product_name);
+                        }
+                        return choiceArray;
+                    },
+                    message: "Which item would you like to update?"
+                },          
+                {
+                    name: "quantity",
+                    type: "input",
+                    message: "How many are currently in stock?",
+                    validate: function (value) {
+                        if (isNaN(value) === false) {
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+            ])
+            .then(function (ans) {
+                // update db
+                connection.query(
+                    "UPDATE products SET ? WHERE ?",
+                    [
+                        {
+                            stock_quantity: ans.quantity
+                        },
+                        {
+                            product_name: ans.name
+                        }
+                    ],
+                    function (error) {
+                        if (error) throw err;
+                        console.log("Inventory updated!");
+                    }
+                );
+                connection.end();
+            });
+    });
 }
 // Add New Product
 // If a manager selects Add New Product, it should allow the manager to add a completely new product to the store.
@@ -137,7 +184,6 @@ function addItem() {
         ])
         .then(function (ans) {
             // when finished prompting, insert a new item into the db with that info
-
             connection.query(
                 "INSERT INTO products SET ?",
                 {
@@ -151,7 +197,7 @@ function addItem() {
                     if (err) throw err;
                     console.log("Your new item was added!");
                 }
-            );    
+            );
             connection.end();
         })
 }
