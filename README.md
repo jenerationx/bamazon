@@ -18,7 +18,7 @@ In terminal (or bash), type `node bamazonCustomer` and the list of items for sal
 
 ## Live Demo (click image for video demonstration):
 
-[![Video of bamazonCustomer](http://img.youtu.be/eOyt78I-sa0?t=16/0.jpg)](https://www.youtube.com/watch?v=eOyt78I-sa0 "Bamazon Customer")
+[![Video of bamazonCustomer](http://img.youtube.com/vi/v=eOyt78I-sa0/0.jpg)](https://www.youtube.com/watch?v=eOyt78I-sa0 "Bamazon Customer")
 
 ## Bamazon Manager
 
