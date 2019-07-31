@@ -2,7 +2,7 @@
 
 ### Overview
 
-In this activity, you'll be creating an Amazon-like storefront with the MySQL skills you learned this unit. The app will take in orders from customers and deplete stock from the store's inventory.  The manager can view and add to the inventory as well.
+In this project, I created an Amazon-like storefront with NodeJS and MySQL. The app will take in orders from customers and deplete stock from the store's inventory.  The manager can view and add to the inventory as well.
 
 My store stocks items you would find in a typical Haberdashery (aka Fabric Store).  
 
@@ -28,10 +28,10 @@ In terminal (or bash), type `node bamazonManager` and a list of choices will be 
 * Add to Inventory
 * Add New Product
 
-If the manager selects `View Products for Sale`, the app should list every available item: the item IDs, names, prices, and quantities.
-If a manager selects `View Low Inventory`, then it should list all items with an inventory count lower than five.
-If a manager selects `Add to Inventory`, your app should display a prompt that will let the manager "add more" of any item currently in the store.
-If a manager selects `Add New Product`, it should allow the manager to add a completely new product to the store.
+If the manager selects `View Products for Sale`, the app lists every available item: the item IDs, names, prices, and quantities.
+If a manager selects `View Low Inventory`, then it lists all items with an inventory count lower than five.
+If a manager selects `Add to Inventory`, the app displays a prompt that will let the manager "add more" of any item currently in the store.
+If a manager selects `Add New Product`, it allows the manager to add a completely new product to the store.
 
 ## Live Demo (click image for video demonstration):
 
